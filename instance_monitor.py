@@ -25,14 +25,14 @@ def process_record(number_occupied_slots, slot_number, instance_type_count_dict 
     elif instance_type_count_dict.min_free_slots_number_per_host == slot_number - number_occupied_slots:
         instance_type_count_dict.hosts_with_min_free_slots_number += 1
 
-def analyze_records(fr, write_func):
+def make_stats(input_lines, write_output_lines_func):
     instance_count_dict = {}
 
     instance_count_dict['M1'] = instance_detail('M1')
     instance_count_dict['M2'] = instance_detail('M2')
     instance_count_dict['M3'] = instance_detail('M3')
 
-    for host_line in fr:
+    for host_line in input_lines:
         host_array = host_line.strip().split(',')
         # check array length
         if len(host_array) < 4 and len(host_array) > 0:
@@ -65,11 +65,11 @@ def analyze_records(fr, write_func):
         instance_count_dict['M3'].hosts_with_min_free_slots_number,
         instance_count_dict['M3'].min_free_slots_number_per_host
     )
-    write_func([string_empty, string_full, string_most_filled])
+    write_output_lines_func([string_empty, string_full, string_most_filled])
 
     print 'completed!'
 
-def make_stats(file_input_path, file_output_path):
+def make_stats_from_file(file_input_path, file_output_path):
     if not os.path.exists("./{0}".format(file_input_path)):
         raise IOError("input file {0} missing".format(file_input_path))
     if not os.path.exists("./{0}".format(file_output_path)):
@@ -77,10 +77,10 @@ def make_stats(file_input_path, file_output_path):
 
     with open(file_input_path, 'r') as fr:
         with open(file_output_path, 'w') as fa:
-            analyze_records(fr, lambda x : fa.writelines(x))
+            make_stats(fr, lambda x : fa.writelines(x))
             fa.close()
         fr.close()
     pass
 
 if __name__ == '__main__':
-    make_stats('./FleetState.txt', './Statistics.txt')
+    make_stats_from_file('./FleetState.txt', './Statistics.txt')
