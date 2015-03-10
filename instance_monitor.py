@@ -1,3 +1,6 @@
+# todo unittests
+
+#todo use namedvalue instead
 class instance_detail():
     def __init__(self, type_name):
         self.type_name = type_name
@@ -12,6 +15,7 @@ def make_stats(file_input_path, file_output_path):
     instance_count_dict['M2'] = instance_detail('M2')
     instance_count_dict['M3'] = instance_detail('M3')
     print 'working..'
+    #todo check if file_input and file_output are correct
     with open(file_input_path, 'r') as fr:
         for host_line in fr:
             #TODO use list comphrension
