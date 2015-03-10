@@ -14,6 +14,8 @@ def make_stats(file_input_path, file_output_path):
     print 'working..'
     with open(file_input_path, 'r') as fr:
         for host_line in fr:
+            #TODO use list comphrension
+            
             # get an associative array(dict) for the current fleet record
             host_array = host_line.strip().split(',')
             # check array length
@@ -24,9 +26,13 @@ def make_stats(file_input_path, file_output_path):
             instance_type = host_array[1]
             slot_number = int(host_array[2])
             try:
+                #TODO use function all
+                
                 number_occupied_slots = sum(map(int, host_array[3:]))
             except ValueError:
                 raise ValueError("check values for host ID: %s " % host_array[0])
+                
+            # todo move out this logic
             if number_occupied_slots == 0:
                 instance_count_dict[instance_type].empty_hosts += 1
             if number_occupied_slots == slot_number:
@@ -46,6 +52,7 @@ def make_stats(file_input_path, file_output_path):
         FULL: M1=<count>; M2=<count>; M3=<count>;
         MOST FILLED: M1=<count>,<empty slots>; M2=<count>,<empty slots>; M3=<count>,<empty slots>;
         """
+        # TODO use format instead of string concatenation
         string_empty = "EMPTY:M1=" + instance_count_dict['M1'].empty_hosts.__str__() + ";M2=" + instance_count_dict['M2'].empty_hosts.__str__() + ";M3=" + \
             instance_count_dict['M3'].empty_hosts.__str__() + ';\n'
 
