@@ -30,7 +30,7 @@ def make_stats(file_input_path, file_output_path):
             instance_type = host_array[1]
             slot_number = int(host_array[2])
             try:
-                #TODO use function all
+                #TODO use function host_array[3:].count('0')
                 
                 number_occupied_slots = sum(map(int, host_array[3:]))
             except ValueError:
