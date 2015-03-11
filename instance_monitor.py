@@ -18,7 +18,7 @@ def process_record(number_occupied_slots, slot_number, instance_type_count_dict 
         instance_type_count_dict.empty_hosts += 1
     if number_occupied_slots == slot_number:
         instance_type_count_dict.full_hosts += 1
-    instance_type_count_dict.occupied_slots = number_occupied_slots
+        return
     if instance_type_count_dict.min_free_slots_number_per_host == -1 or \
         instance_type_count_dict.min_free_slots_number_per_host < slot_number - number_occupied_slots:
         instance_type_count_dict.min_free_slots_number_per_host, instance_type_count_dict.hosts_with_min_free_slots_number = slot_number - number_occupied_slots, 1
@@ -34,11 +34,15 @@ def make_stats(input_lines, write_output_lines_func):
 
     for host_line in input_lines:
         host_array = host_line.strip().split(',')
+        len_host_array = len(host_array)
         # check array length
-        if len(host_array) < 4 and len(host_array) > 0:
+        if len(host_array) < 4 and len_host_array > 0:
             raise ValueError("too few values for host ID: {0} ".format(host_array[0]))
-        elif len(host_array) < 0:
-            raise ValueError("one record corrupted, check FleetState.txt")
+        elif len_host_array < 0:
+            raise ValueError("one record corrupted, check record {0}".format(host_array[0]))
+        if len(host_array[3:]) != int(host_array[2]):
+            raise ValueError("slot number is not consistent, check record {0}".format(host_array[0]))
+
         instance_type, slot_number= host_array[1], int(host_array[2])
         try:
             number_occupied_slots = host_array[3:].count('1')
